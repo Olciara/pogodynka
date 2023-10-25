@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\WeatherRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WeatherRepository::class)]
@@ -27,6 +28,13 @@ class Weather
 
     #[ORM\Column(length: 255)]
     private ?string $uv = null;
+
+    #[ORM\ManyToOne(inversedBy: 'measurements')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Location $location = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE,nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
     public function getId(): ?int
     {
@@ -89,6 +97,30 @@ class Weather
     public function setUv(string $uv): static
     {
         $this->uv = $uv;
+
+        return $this;
+    }
+
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): static
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
 
         return $this;
     }
