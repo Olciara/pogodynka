@@ -29,8 +29,12 @@
                 <td>{{ weather.uv }}</td>
                 <td>{{ weather.date ? weather.date|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_w_show', {'id': weather.id}) }}">show</a>
-                    <a href="{{ path('app_w_edit', {'id': weather.id}) }}">edit</a>
+                    {% if is_granted('ROLE_W_SHOW') %}
+                        <a href="{{ path('app_w_show', {'id': measurement.id}) }}">show</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_W_EDIT') %}
+                        <a href="{{ path('app_w_edit', {'id': measurement.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

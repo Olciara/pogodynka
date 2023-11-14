@@ -10,11 +10,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/w')]
 class WController extends AbstractController
 {
     #[Route('/', name: 'app_w_index', methods: ['GET'])]
+    #[IsGranted('ROLE_MEASUREMENT_INDEX')]
     public function index(WeatherRepository $weatherRepository): Response
     {
         return $this->render('w/index.html.twig', [
@@ -23,6 +25,7 @@ class WController extends AbstractController
     }
 
     #[Route('/new', name: 'app_w_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MEASUREMENT_NEW')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $weather = new Weather();
@@ -43,6 +46,7 @@ class WController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_w_show', methods: ['GET'])]
+    #[IsGranted('ROLE_MEASUREMENT_SHOW')]
     public function show(Weather $weather): Response
     {
         return $this->render('w/show.html.twig', [
@@ -51,6 +55,7 @@ class WController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_w_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MEASUREMENT_EDIT')]
     public function edit(Request $request, Weather $weather, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(WeatherType::class, $weather);
@@ -69,6 +74,7 @@ class WController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_w_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_MEASUREMENT_DELETE')]
     public function delete(Request $request, Weather $weather, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$weather->getId(), $request->request->get('_token'))) {
